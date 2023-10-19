@@ -4,13 +4,13 @@
 
 class Product {
 public:
-    virtual ~Product() = default;
+    virtual ~Product() { std::cout << "~Product" << std::endl; }
     virtual std::string Operation() const = 0;
 };
 
 class ConcreteProductA : public Product {
 public:
-    ~ConcreteProductA() = default;
+    ~ConcreteProductA() { std::cout << "~ConcreteProductA" << std::endl; }
     std::string Operation() const override {
         return "Result of ConcreteProductA";
     }
@@ -18,7 +18,7 @@ public:
 
 class ConcreteProductB : public Product {
 public:
-    ~ConcreteProductB() = default;
+    ~ConcreteProductB() { std::cout << "~ConcreteProductB" << std::endl; }
     std::string Operation() const override {
         return "Result of ConcreteProductB";
     }
@@ -26,13 +26,13 @@ public:
 
 class Creator {
 public:
-    virtual ~Creator() = default;
+    virtual ~Creator() { std::cout << "~Creator" << std::endl; }
     virtual std::shared_ptr<Product> createProduct() = 0;
 };
 
 class ConcreteCreatorA : public Creator {
 public:
-    ~ConcreteCreatorA() = default;
+    ~ConcreteCreatorA() { std::cout << "~ConcreteCreatorA" << std::endl; }
     std::shared_ptr<Product> createProduct() override {
         return std::make_shared<ConcreteProductA>();
     }
@@ -40,7 +40,7 @@ public:
 
 class ConcreteCreatorB : public Creator {
 public:
-    ~ConcreteCreatorB() = default;
+    ~ConcreteCreatorB() { std::cout << "~ConcreteCreatorB" << std::endl; }
     std::shared_ptr<Product> createProduct() override {
         return std::make_shared<ConcreteProductB>();
     }

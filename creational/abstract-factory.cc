@@ -24,36 +24,36 @@ public:
     }
 };
 
-class Creator {
+class Factory {
 public:
-    virtual ~Creator() { std::cout << "~Creator" << std::endl; }
-    virtual std::shared_ptr<Product> createProduct() = 0;
+    virtual ~Factory() { std::cout << "~Factory" << std::endl; }
+    virtual std::shared_ptr<Product> factoryMethod() = 0;
 };
 
-class ConcreteCreatorA : public Creator {
+class ConcreteFactoryA : public Factory {
 public:
-    ~ConcreteCreatorA() { std::cout << "~ConcreteCreatorA" << std::endl; }
-    std::shared_ptr<Product> createProduct() override {
+    ~ConcreteFactoryA() { std::cout << "~ConcreteFactoryA" << std::endl; }
+    std::shared_ptr<Product> factoryMethod() override {
         return std::make_shared<ConcreteProductA>();
     }
 };
 
-class ConcreteCreatorB : public Creator {
+class ConcreteFactoryB : public Factory {
 public:
-    ~ConcreteCreatorB() { std::cout << "~ConcreteCreatorB" << std::endl; }
-    std::shared_ptr<Product> createProduct() override {
+    ~ConcreteFactoryB() { std::cout << "~ConcreteFactoryB" << std::endl; }
+    std::shared_ptr<Product> factoryMethod() override {
         return std::make_shared<ConcreteProductB>();
     }
 };
 
 int main(int argc, char const *argv[])
 {
-    std::shared_ptr<Creator> creator = std::make_shared<ConcreteCreatorA>();
-    std::shared_ptr<Product> product = creator->createProduct();
+    std::shared_ptr<Factory> creator = std::make_shared<ConcreteFactoryA>();
+    std::shared_ptr<Product> product = creator->factoryMethod();
     std::cout << product->Operation() << std::endl;
 
-    creator = std::make_shared<ConcreteCreatorB>();
-    product = creator->createProduct();
+    creator = std::make_shared<ConcreteFactoryB>();
+    product = creator->factoryMethod();
     std::cout << product->Operation() << std::endl;
 
     return 0;

@@ -1,60 +1,95 @@
 #include <iostream>
 #include <string>
-#include <memory>
 
-class Product {
+class ProductA {
 public:
-    virtual ~Product() { std::cout << "~Product" << std::endl; }
+    ~ProductA() { std::cout << "~ProductA" << std::endl; }
     virtual std::string Operation() const = 0;
 };
 
-class ConcreteProductA : public Product {
+class ConcreteProductAX : public ProductA {
 public:
-    ~ConcreteProductA() { std::cout << "~ConcreteProductA" << std::endl; }
+    ~ConcreteProductAX() { std::cout << "~ConcreteProductAX" << std::endl; }
     std::string Operation() const override {
-        return "Result of ConcreteProductA";
+        return "result of ConcreteProductAX";
     }
 };
 
-class ConcreteProductB : public Product {
+class ConcreteProductAY : public ProductA {
 public:
-    ~ConcreteProductB() { std::cout << "~ConcreteProductB" << std::endl; }
+    ~ConcreteProductAY() { std::cout << "~ConcreteProductAY" << std::endl; }
     std::string Operation() const override {
-        return "Result of ConcreteProductB";
+        return "result of ConcreteProductAY";
     }
 };
 
-class Factory {
+class ProductB {
 public:
-    virtual ~Factory() { std::cout << "~Factory" << std::endl; }
-    virtual std::shared_ptr<Product> factoryMethod() = 0;
+    ~ProductB() { std::cout << "~ProductB" << std::endl; }
+    virtual std::string Operation() const = 0;
 };
 
-class ConcreteFactoryA : public Factory {
+class ConcreteProductBX : public ProductB {
 public:
-    ~ConcreteFactoryA() { std::cout << "~ConcreteFactoryA" << std::endl; }
-    std::shared_ptr<Product> factoryMethod() override {
-        return std::make_shared<ConcreteProductA>();
+    ~ConcreteProductBX() { std::cout << "~ConcreteProductBX" << std::endl; }
+    std::string Operation() const override {
+        return "result of ConcreteProductBX";
     }
 };
 
-class ConcreteFactoryB : public Factory {
+class ConcreteProductBY : public ProductB {
 public:
-    ~ConcreteFactoryB() { std::cout << "~ConcreteFactoryB" << std::endl; }
-    std::shared_ptr<Product> factoryMethod() override {
-        return std::make_shared<ConcreteProductB>();
+    ~ConcreteProductBY() { std::cout << "~ConcreteProductBY" << std::endl; }
+    std::string Operation() const override {
+        return "result of ConcreteProductBY";
+    }
+};
+
+class AbstractFactory {
+public:
+    virtual ~AbstractFactory() { std::cout << "~AbstractFactory" << std::endl; }
+    virtual ProductA* createProductA() = 0;
+    virtual ProductB* createProductB() = 0;
+};
+
+class ConcreteFactoryX : public AbstractFactory {
+public:
+    ~ConcreteFactoryX() { std::cout << "~ConcreteFactoryX" << std::endl; }
+    ProductA* createProductA() override {
+        return new ConcreteProductAX;
+    }
+    ProductB* createProductB() override {
+        return new ConcreteProductBX;
+    }
+};
+
+class ConcreteFactoryY : public AbstractFactory {
+public:
+    ~ConcreteFactoryY() { std::cout << "~ConcreteFactoryY" << std::endl; }
+    ProductA* createProductA() override {
+        return new ConcreteProductAY;
+    }
+    ProductB* createProductB() override {
+        return new ConcreteProductBY;
     }
 };
 
 int main(int argc, char const *argv[])
 {
-    std::shared_ptr<Factory> creator = std::make_shared<ConcreteFactoryA>();
-    std::shared_ptr<Product> product = creator->factoryMethod();
-    std::cout << product->Operation() << std::endl;
+    auto lambda = [] (AbstractFactory* af) {
+        ProductA* productA = af->createProductA();
+        ProductB* productB = af->createProductB();
 
-    creator = std::make_shared<ConcreteFactoryB>();
-    product = creator->factoryMethod();
-    std::cout << product->Operation() << std::endl;
+        std::cout << productA->Operation() << std::endl;
+        std::cout << productB->Operation() << std::endl;
+    
+        delete af;
+        delete productA;
+        delete productB;
+    };
+
+    lambda(new ConcreteFactoryX);
+    lambda(new ConcreteFactoryY);
 
     return 0;
 }
